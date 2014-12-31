@@ -1,0 +1,5 @@
+/home/shybovycha/projects/uniwersytet/abstraktne/task8/task8/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
+/home/shybovycha/projects/uniwersytet/abstraktne/task8/task8/bin/Debug/task8.exe.mdb
+/home/shybovycha/projects/uniwersytet/abstraktne/task8/task8/bin/Debug/task8.exe
+/home/shybovycha/projects/uniwersytet/abstraktne/task8/task8/obj/x86/Debug/task8.exe
+/home/shybovycha/projects/uniwersytet/abstraktne/task8/task8/obj/x86/Debug/task8.exe.mdb
