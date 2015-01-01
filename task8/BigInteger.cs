@@ -19,7 +19,7 @@ namespace Exercise
                 Negative = true;
                 value = value.Substring(1);
             }
-				
+
             for (int i = value.Length - 1; i > -1; i--) {
                 Digits.Add(int.Parse(value[i].ToString()));
             }
@@ -52,6 +52,14 @@ namespace Exercise
 
         public static BigInteger operator +(BigInteger a, BigInteger b)
         {
+            /*if (a.Negative != b.Negative) {
+                if (a.Negative) {
+                    return a - b;
+                } else {
+                    return b - a;
+                }
+            }*/
+
             BigInteger result = new BigInteger();
 
             int mem = 0;
@@ -92,12 +100,64 @@ namespace Exercise
 
             result.Digits.AddRange(v_res);
 
+            result.Negative = a.Negative;
+
             return result;
         }
 
         public static BigInteger operator -(BigInteger a, BigInteger b)
         {
             BigInteger result = new BigInteger();
+
+            int mem = 0;
+
+            List<int> v1 = new List<int>();
+            List<int> v2 = new List<int>();
+            List<int> v_res = new List<int>();
+
+            if (a < b) {
+                v1.AddRange(b.Digits);
+                v2.AddRange(a.Digits);
+                result.Negative = true;
+            } else {
+                v1.AddRange(a.Digits);
+                v2.AddRange(b.Digits);
+            }
+
+            int max_length = Math.Max(v1.Count(), v2.Count());
+
+            for (int i = 0; i < max_length; i++) {
+                int tmp = mem;
+
+                mem = 0;
+
+                if (i < v1.Count())
+                    tmp += v1[i];
+
+                if (i < v2.Count()) {
+                    if (tmp < v2[i]) {
+                        mem = -1;
+                        tmp += 10;
+                    }
+
+                    tmp -= v2[i];
+                }
+
+                v_res.Add(tmp);
+            }
+
+            if (mem < 0) {
+                result.Negative = true;
+
+                mem = Math.Abs(mem);
+
+                while (mem > 0) {
+                    v_res.Add(mem % 10);
+                    mem /= 10;
+                }
+            }
+
+            result.Digits.AddRange(v_res);
 
             return result;
         }
@@ -133,6 +193,54 @@ namespace Exercise
         public static bool operator !=(BigInteger a, BigInteger b)
         {
             return !(a == b);
+        }
+
+        public static bool operator <(BigInteger a, BigInteger b)
+        {
+            if (a.Negative == b.Negative) {
+                if (!a.Negative && !b.Negative) {
+                    if (a.Digits.Count() < b.Digits.Count())
+                        return true;
+                    else if (a.Digits.Count() > b.Digits.Count())
+                        return false;
+
+                    int digits_count = a.Digits.Count();
+
+                    for (int i = digits_count - 1; i > -1; i--) {
+                        if (a.Digits[i] == b.Digits[i])
+                            continue;
+
+                        return (a.Digits[i] < b.Digits[i]);
+                    }
+                }
+
+                // opposite if both would be positive
+                if (a.Negative && b.Negative) {
+                    if (a.Digits.Count() < b.Digits.Count())
+                        return false;
+                    else if (a.Digits.Count() > b.Digits.Count())
+                        return true;
+
+                    int digits_count = a.Digits.Count();
+
+                    for (int i = digits_count - 1; i > -1; i--) {
+                        if (a.Digits[i] == b.Digits[i])
+                            continue;
+
+                        return (a.Digits[i] > b.Digits[i]);
+                    }
+                }
+            }
+
+            if (a.Negative && !b.Negative)
+                return true;
+
+            return false;
+        }
+
+        public static bool operator >(BigInteger a, BigInteger b)
+        {
+            return (!(a < b) && !(a == b));
         }
 
         public override bool Equals(object other)
