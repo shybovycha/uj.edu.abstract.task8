@@ -52,13 +52,13 @@ namespace Exercise
 
         public static BigInteger operator +(BigInteger a, BigInteger b)
         {
-            /*if (a.Negative != b.Negative) {
+            if (a.Negative != b.Negative) {
                 if (a.Negative) {
                     return a - b;
                 } else {
                     return b - a;
                 }
-            }*/
+            }
 
             BigInteger result = new BigInteger();
 
@@ -93,7 +93,7 @@ namespace Exercise
                 v_res.Add(digit);
             }
 
-            while (mem > 9) {
+            while (mem > 0) {
                 v_res.Add(mem % 10);
                 mem /= 10;
             }
@@ -165,6 +165,59 @@ namespace Exercise
         public static BigInteger operator *(BigInteger a, BigInteger b)
         {
             BigInteger result = new BigInteger();
+
+            int mem = 0;
+
+            List<int> v1 = new List<int>();
+            List<int> v2 = new List<int>();
+            List<int> v_res = new List<int>();
+
+            v1.AddRange(a.Digits);
+            v2.AddRange(b.Digits);
+
+            for (int t = 0; t < v2.Count(); t++) {
+                BigInteger tmp_result = new BigInteger();
+
+                v_res.Clear();
+
+                for (int j = 0; j < t; j++) {
+                    v_res.Add(0);
+                }
+
+                for (int i = 0; i < v1.Count(); i++) {
+                    int tmp = 0;
+
+                    if (i < v1.Count())
+                        tmp += v1[i];
+
+                    if (t < v2.Count())
+                        tmp *= v2[t];
+
+                    tmp += mem;
+
+                    int digit = tmp % 10;
+
+                    mem = 0;
+
+                    if (tmp >= 10) {
+                        mem = tmp / 10;
+                    }
+
+                    v_res.Add(digit);
+                }
+
+                while (mem > 0) {
+                    v_res.Add(mem % 10);
+                    mem /= 10;
+                }
+
+                tmp_result.Digits.AddRange(v_res);
+
+                result += tmp_result;
+            }
+
+            if (a.Negative != b.Negative)
+                result.Negative = true;
 
             return result;
         }
