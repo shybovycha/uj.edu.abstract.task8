@@ -26,8 +26,10 @@ namespace task8
             Console.WriteLine("a + b = {0}", a + b);
             Console.WriteLine("a - b = {0}", a - b);
             Console.WriteLine("a * b = {0}", a * b);
-            Console.WriteLine("a / b = {0}", a / b);
+            Console.WriteLine("b / a = {0}", b / a);
             Console.WriteLine("a % b = {0}", a % b);
+
+            Console.WriteLine("5157536727 / 234276 = {0}", new BigInteger("5157536727") / new BigInteger("234276"));
         }
     }
 }
