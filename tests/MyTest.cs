@@ -24,7 +24,7 @@ namespace tests
         public void ToStringImplementation()
         {
             BigInteger a = new BigInteger();
-            Assert.AreEqual(a.ToString().Length, 0);
+            Assert.AreEqual(a.ToString().Length, 1);
 
             BigInteger b = new BigInteger("-1234567890987654321");
             Assert.AreEqual(b.ToString(), "-1234567890987654321");
