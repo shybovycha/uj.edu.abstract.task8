@@ -1,17 +1,16 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="tests/BasicTests.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="task8/BigInteger.cs">
     <Files>
-      <File FileName="task8/BigInteger.cs" Line="1" Column="1" />
+      <File FileName="task8/BigInteger.cs" Line="9" Column="9" />
       <File FileName="task8/Program.cs" Line="1" Column="1" />
-      <File FileName="tests/MyTest.cs" Line="9" Column="9" />
       <File FileName="tests/BasicTests.cs" Line="1" Column="1" />
+      <File FileName="tests/MyTest.cs" Line="31" Column="31" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/home/shybovycha/projects/uniwersytet/abstraktne/task8/task8/BigInteger.cs" line="297" column="1" />
-      <Breakpoint file="/home/shybovycha/projects/uniwersytet/abstraktne/task8/task8/BigInteger.cs" line="309" column="1" />
+      <Breakpoint file="/home/shybovycha/projects/uniwersytet/abstraktne/task8/tests/BasicTests.cs" line="155" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

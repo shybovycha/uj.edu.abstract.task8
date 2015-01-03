@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Exercise
 {
-    public class BigInteger
+    public class BigInteger : IEquatable<BigInteger>
     {
         protected List<int> _Digits = new List<int>();
         protected List<char> _Alphabet = new List<char>();
@@ -86,7 +86,12 @@ namespace Exercise
         {
             CheckAlphabet(alphabet);
 
-            if (value[0] == '-') {
+            _Alphabet.Clear();
+            _Alphabet.AddRange(alphabet);
+
+            FromBase(alphabet.Count(), value.ToString());
+
+            /*if (value[0] == '-') {
                 _Negative = true;
                 value = value.Substring(1);
             }
@@ -96,14 +101,19 @@ namespace Exercise
                 _Digits.Add(int.Parse(value[i].ToString()));
             }
 
-            Trim();
+            Trim();*/
         }
 
         public BigInteger(IEnumerable<char> alphabet, IEnumerable<char> value)
         {
             CheckAlphabet(alphabet);
 
-            if (value.ElementAt(0) == '-') {
+            _Alphabet.Clear();
+            _Alphabet.AddRange(alphabet);
+
+            FromBase(alphabet.Count(), value.ToString());
+
+            /*if (value.ElementAt(0) == '-') {
                 _Negative = true;
                 value = value.Skip(1);
             }
@@ -113,22 +123,28 @@ namespace Exercise
                 _Digits.Add(int.Parse(value.ElementAt(i).ToString()));
             }
 
-            Trim();
+            Trim();*/
         }
 
         public BigInteger(IEnumerable<char> alphabet, StringBuilder value)
         {
             CheckAlphabet(alphabet);
+
+            _Alphabet.Clear();
+            _Alphabet.AddRange(alphabet);
+
+            FromBase(alphabet.Count(), value.ToString());
         }
 
         public BigInteger(int numericBase, NativeBigInteger value)
         {
             SetAlphabet();
 
-            // TODO: dunno if this is correct...
             if (numericBase > Alphabet.Count) {
                 throw new ArgumentException("Too big numeric base");
             }
+
+            // FromBase(numericBase, value.ToString());
 
             _Base = numericBase;
 
@@ -154,13 +170,15 @@ namespace Exercise
                 value = value.Substring(1);
             }
 
+            // _Digits.Add(1);
             BigInteger d = new BigInteger("1");
 
-            foreach (char ch in value) {
+            for (int i = value.Count() - 1; i > -1; i--) {
+                char ch = value[i];
                 int digit = _Alphabet.IndexOf(ch);
 
                 List<int> tmp_res = new List<int>();
-                tmp_res.AddRange((this * d * digit).Digits);
+                tmp_res.AddRange((this + (d * digit)).Digits);
                 _Digits.Clear();
                 _Digits.AddRange(tmp_res);
 
@@ -503,6 +521,9 @@ namespace Exercise
 
         public static bool operator ==(BigInteger a, int _b)
         {
+            if ((a as object) == null)
+                return false;
+
             BigInteger b = new BigInteger(_b.ToString());
             return (a._Negative == b._Negative) && (Enumerable.SequenceEqual(a._Digits.OrderBy(t => t), b._Digits.OrderBy(t => t)));
         }
@@ -515,6 +536,12 @@ namespace Exercise
 
         public static bool operator ==(BigInteger a, BigInteger b)
         {
+            if ((((a as object) == null) && ((b as object) != null)) || (((a as object) != null) && ((b as object) == null)))
+                return false;
+
+            if (((a as object) == null) && ((b as object) == null))
+                return true;
+
             return (a._Negative == b._Negative) && (Enumerable.SequenceEqual(a._Digits.OrderBy(t => t), b._Digits.OrderBy(t => t)));
         }
 
@@ -569,6 +596,18 @@ namespace Exercise
         public static bool operator >(BigInteger a, BigInteger b)
         {
             return (!(a < b) && !(a == b));
+        }
+
+        public bool Equals(BigInteger other)
+        {
+            if ((other as object) == null)
+                return false;
+
+            bool a = this.GetType() == other.GetType(),
+            b = this._Negative == (other)._Negative,
+            c = Enumerable.SequenceEqual(this._Digits.OrderBy(t => t), (other)._Digits.OrderBy(t => t));
+
+            return ((a) && (b) && (c));
         }
 
         public override bool Equals(object other)
