@@ -24,6 +24,7 @@ namespace task8
             Console.WriteLine("-a < a: {0}", -a < a);
 
             Console.WriteLine("a + b = {0}", a + b);
+            Console.WriteLine("-a - b = {0}", -a - b);
             Console.WriteLine("a - b = {0}", a - b);
             Console.WriteLine("a * b = {0}", a * b);
             Console.WriteLine("b / a = {0}", b / a);

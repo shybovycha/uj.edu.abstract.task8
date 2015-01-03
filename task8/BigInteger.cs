@@ -152,14 +152,15 @@ namespace Exercise
                 _Negative = true;
 
             while (value > 0) {
-                _Digits.Add((int) value % 10);
+                _Digits.Add((int) (value % 10));
                 value /= 10;
             }
         }
 
         protected void FromBase(int numericBase, String value)
         {
-            SetAlphabet();
+            if (Alphabet.Count < 1)
+                SetAlphabet();
 
             _Digits.Clear();
             _Base = numericBase;
@@ -249,6 +250,13 @@ namespace Exercise
             return result;
         }
 
+        public BigInteger Abs()
+        {
+            BigInteger result = new BigInteger();
+            result._Digits.AddRange(Digits);
+            return result;
+        }
+
         public static BigInteger operator -(BigInteger value)
         {
             BigInteger result = new BigInteger();
@@ -261,11 +269,13 @@ namespace Exercise
 
         public static BigInteger operator +(BigInteger a, BigInteger b)
         {
-            if (a._Negative != b._Negative) {
-                if (a._Negative) {
-                    return a - b;
+            if (a.Negative != b.Negative) {
+                if (a.Negative) {
+                    // -4 + 2 == 2 - 4
+                    return (b - (-a));
                 } else {
-                    return b - a;
+                    // 4 + (-2) == 4 - 2
+                    return (a - (-b));
                 }
             }
 
@@ -316,6 +326,23 @@ namespace Exercise
         public static BigInteger operator -(BigInteger a, BigInteger b)
         {
             BigInteger result = new BigInteger();
+
+            if (a.Negative == b.Negative) {
+                // -4 - (-2) == -(4 - 2)
+                if (a.Negative && b.Negative) {
+                    result._Negative = true;
+                }
+
+                // else: 4 - 2 == 4 - 2
+            } else {
+                if (a.Negative) {
+                    // -4 - 2 == -(4 + 2)
+                    return -((-a) + b);
+                } else {
+                    // 4 - (-2) == 4 + 2
+                    return (a + (-b));
+                }
+            }
 
             int mem = 0;
 
@@ -465,6 +492,12 @@ namespace Exercise
         {
             BigInteger result = new BigInteger();
 
+            if (a.Negative != b.Negative)
+                result._Negative = true;
+
+            a._Negative = false;
+            b._Negative = false;
+
             List<int> v1 = new List<int>();
 
             v1.AddRange(a._Digits);
@@ -490,7 +523,7 @@ namespace Exercise
                     res_digit--;
 
                     if (res_digit < 0) {
-                        if (next_digit == b._Digits.Count) {
+                        if (next_digit >= v1.Count) {
                             break;
                         }
 
@@ -542,7 +575,7 @@ namespace Exercise
             if (((a as object) == null) && ((b as object) == null))
                 return true;
 
-            return (a._Negative == b._Negative) && (Enumerable.SequenceEqual(a._Digits.OrderBy(t => t), b._Digits.OrderBy(t => t)));
+            return ((a._Negative == b._Negative) && (a.ToString() == b.ToString()));
         }
 
         public static bool operator !=(BigInteger a, BigInteger b)
