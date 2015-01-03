@@ -24,10 +24,10 @@ namespace tests
         public void ToStringImplementation()
         {
             BigInteger a = new BigInteger();
-            Assert.AreEqual(a.ToString().Length, 1);
+            Assert.AreEqual(1, a.ToString().Length);
 
             BigInteger b = new BigInteger("-1234567890987654321");
-            Assert.AreEqual(b.ToString(), "-1234567890987654321");
+            Assert.AreEqual("-1234567890987654321", b.ToString());
         }
 
         [Test()]
@@ -80,6 +80,8 @@ namespace tests
             // b % d == 2
             // BigInteger b_mod_d = new BigInteger("2");
 
+            Assert.AreEqual("123", new BigInteger("0123456789abcdef", "7b").ToDecimalString());
+            Assert.AreEqual("7b", new BigInteger(16, System.Numerics.BigInteger.Parse("123")).ToBase());
             Assert.AreEqual(-a, minus_a);
             Assert.AreEqual(a - b, minus_a);
             Assert.AreEqual(a + b, a_plus_b);

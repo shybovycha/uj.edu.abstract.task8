@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Exercise
 {
-    public class BigInteger : IEquatable<BigInteger>
+    public class BigInteger : IEquatable<BigInteger>, IFormattable
     {
         protected List<int> _Digits = new List<int>();
         protected List<char> _Alphabet = new List<char>();
@@ -89,19 +89,7 @@ namespace Exercise
             _Alphabet.Clear();
             _Alphabet.AddRange(alphabet);
 
-            FromBase(alphabet.Count(), value.ToString());
-
-            /*if (value[0] == '-') {
-                _Negative = true;
-                value = value.Substring(1);
-            }
-
-            // TODO: parse string from base X
-            for (int i = value.Length - 1; i > -1; i--) {
-                _Digits.Add(int.Parse(value[i].ToString()));
-            }
-
-            Trim();*/
+            FromBase(alphabet.Count(), value);
         }
 
         public BigInteger(IEnumerable<char> alphabet, IEnumerable<char> value)
@@ -111,19 +99,7 @@ namespace Exercise
             _Alphabet.Clear();
             _Alphabet.AddRange(alphabet);
 
-            FromBase(alphabet.Count(), value.ToString());
-
-            /*if (value.ElementAt(0) == '-') {
-                _Negative = true;
-                value = value.Skip(1);
-            }
-
-            // TODO: parse string from base X
-            for (int i = value.Count() - 1; i > -1; i--) {
-                _Digits.Add(int.Parse(value.ElementAt(i).ToString()));
-            }
-
-            Trim();*/
+            FromBase(alphabet.Count(), new String(value.ToArray()));
         }
 
         public BigInteger(IEnumerable<char> alphabet, StringBuilder value)
@@ -143,8 +119,6 @@ namespace Exercise
             if (numericBase > Alphabet.Count) {
                 throw new ArgumentException("Too big numeric base");
             }
-
-            // FromBase(numericBase, value.ToString());
 
             _Base = numericBase;
 
@@ -171,7 +145,6 @@ namespace Exercise
                 value = value.Substring(1);
             }
 
-            // _Digits.Add(1);
             BigInteger d = new BigInteger("1");
 
             for (int i = value.Count() - 1; i > -1; i--) {
@@ -185,6 +158,39 @@ namespace Exercise
 
                 d *= numericBase;
             }
+        }
+
+        public String ToBase()
+        {
+            if (Alphabet.Count < 1)
+                SetAlphabet();
+
+            List<char> result = new List<char>();
+
+            if (Digits.Count < 1) {
+                return "0";
+            }
+
+            BigInteger tmp = this.Abs();
+
+            BigInteger zero = new BigInteger("0");
+            BigInteger numericBase = new BigInteger(Base.ToString());
+
+            while (tmp > zero) {
+                int digit = int.Parse((tmp % numericBase).ToDecimalString());
+                char ch = Alphabet[digit];
+                result.Add(ch);
+                tmp /= numericBase;
+            }
+
+            if (Negative)
+                result.Add('-');
+
+            result.Reverse();
+
+            String s = new String(result.ToArray());
+
+            return s;
         }
 
         protected void CheckAlphabet(IEnumerable<char> alphabet)
@@ -224,30 +230,43 @@ namespace Exercise
             return this;
         }
 
+        public String ToDecimalString()
+        {
+            String result = "";
+
+            if (Negative) {
+                result += "-";
+            }
+
+            if (Digits.Count < 1) {
+                return "0";
+            }
+
+            for (int i = Digits.Count - 1; i > -1; i--) {
+                result += Digits[i].ToString();
+            }
+
+            return result;
+        }
+
         public override int GetHashCode()
         {
-            return NativeBigInteger.Parse(ToString()).GetHashCode();
+            return NativeBigInteger.Parse(ToDecimalString()).GetHashCode();
+        }
+
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            if (format[0] != 'b')
+                throw new FormatException(String.Format("Bad format {0} for BigInteger", format));
+
+            BigInteger a = new BigInteger(ToDecimalString());
+            a._Base = int.Parse(format.Substring(1));
+            return a.ToBase();
         }
 
         public override String ToString()
         {
-            String result = "";
-
-            if (_Negative) {
-                result += "-";
-            }
-
-            if (_Digits.Count < 1) {
-                result += "0";
-
-                return result;
-            }
-
-            for (int i = _Digits.Count - 1; i > -1; i--) {
-                result += _Digits[i].ToString();
-            }
-
-            return result;
+            return ToBase();
         }
 
         public BigInteger Abs()
@@ -570,7 +589,7 @@ namespace Exercise
                 return false;
 
             BigInteger b = new BigInteger(_b.ToString());
-            return (a._Negative == b._Negative) && (Enumerable.SequenceEqual(a._Digits.OrderBy(t => t), b._Digits.OrderBy(t => t)));
+            return (a._Negative == b._Negative) && (a.ToDecimalString() == b.ToDecimalString()); // (Enumerable.SequenceEqual(a._Digits.OrderBy(t => t), b._Digits.OrderBy(t => t)));
         }
 
         public static bool operator !=(BigInteger a, int _b)
@@ -587,7 +606,7 @@ namespace Exercise
             if (((a as object) == null) && ((b as object) == null))
                 return true;
 
-            return ((a._Negative == b._Negative) && (a.ToString() == b.ToString()));
+            return ((a._Negative == b._Negative) && (a.ToDecimalString() == b.ToDecimalString()));
         }
 
         public static bool operator !=(BigInteger a, BigInteger b)
