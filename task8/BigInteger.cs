@@ -254,6 +254,7 @@ namespace Exercise
         {
             BigInteger result = new BigInteger();
             result._Digits.AddRange(Digits);
+            result._Base = Base;
             return result;
         }
 
@@ -261,6 +262,7 @@ namespace Exercise
         {
             BigInteger result = new BigInteger();
 
+            result._Base = value.Base;
             result._Digits.AddRange(value._Digits);
             result._Negative = !value._Negative;
 
@@ -280,6 +282,8 @@ namespace Exercise
             }
 
             BigInteger result = new BigInteger();
+
+            result._Base = Math.Max(a.Base, b.Base);
 
             int mem = 0;
 
@@ -326,6 +330,8 @@ namespace Exercise
         public static BigInteger operator -(BigInteger a, BigInteger b)
         {
             BigInteger result = new BigInteger();
+
+            result._Base = Math.Max(a.Base, b.Base);
 
             if (a.Negative == b.Negative) {
                 // -4 - (-2) == -(4 - 2)
@@ -401,6 +407,8 @@ namespace Exercise
         {
             BigInteger result = new BigInteger();
 
+            result._Base = Math.Max(a.Base, b.Base);
+
             int mem = 0;
 
             List<int> v1 = new List<int>();
@@ -461,6 +469,8 @@ namespace Exercise
         {
             BigInteger result = new BigInteger();
 
+            result._Base = a.Base;
+
             int mem = 0;
             bool b_negative = (b < 0);
 
@@ -494,6 +504,8 @@ namespace Exercise
 
             if (a.Negative != b.Negative)
                 result._Negative = true;
+
+            result._Base = Math.Max(a.Base, b.Base);
 
             a._Negative = false;
             b._Negative = false;
